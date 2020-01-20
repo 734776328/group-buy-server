@@ -1,0 +1,43 @@
+{
+  "name": "mt-app-server",
+  "version": "1.0.0",
+  "description": "mt-mobile-server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/734776328/group-buy-server.git"
+  },
+  "keywords": [
+    "node",
+    "mt"
+  ],
+  "author": "山有木兮 <734776328@qq.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/734776328/group-buy-server/issues"
+  },
+  "homepage": "https://github.com/734776328/group-buy-server#readme",
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/register": "^7.8.3",
+    "babel-cli": "^6.26.0"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/polyfill": "^7.8.3",
+    "@babel/runtime": "^7.8.3",
+    "chalk": "^3.0.0",
+    "core-js": "^2.6.11",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "mongoose": "^5.8.0",
+    "nodemailer": "^6.4.2",
+    "nodemon": "^2.0.2",
+    "redis": "^2.8.0"
+  }
+}
