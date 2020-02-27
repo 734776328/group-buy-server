@@ -11,6 +11,7 @@ class Shop {
     this.getShopInfo = this.getShopInfo.bind(this)
     this.search = this.search.bind(this)
     this.createShop = this.createShop.bind(this)
+    this.addGoods = this.addGoods.bind(this)
   }
   // 添加商品
   async goods (req, res, next) {
@@ -106,6 +107,30 @@ class Shop {
       })
     })
   }
+  // 添加商品
+  async addGoods (req, res, next) {
+    // req.body 自动会将JSON数据转为对象
+    // let { goodsData } = req. body
+    // goodsData = JSON.parse(goodsData)
+    // goodsData.goodsId = this.randomId()
+    // console.log(goodsData)
+    // let { username, mail } = req.session.userInfo
+    // let create = new goodsModel({
+    //   mail: mail,
+    //   shopId: '000000000',
+    //   goods: goodsData.goods
+    // })
+    // create.save( (err, result) => {
+    //   if (err) {
+    //     console.log( err );
+    //     res.status(500).send({
+    //       msg: '服务器繁忙，请稍后再试！',
+    //       data: {}
+    //     })
+    //     return false;
+    //   }
+    // } )
+  }
   // 返回所有商铺
   async getShops (req, res, next) {
     let result = await shopModel.find();
@@ -116,6 +141,7 @@ class Shop {
   }
   // 返回某个商铺的详情,包括商品信息
   async getShopDetaile (req, res, next) {
+    console.log(req.params)
     const { shopid } = req.params;
     let resultGoods = await goodsModel.find({shopId: shopid});
     let shopInfo = await shopModel.findOne({shopId: shopid});

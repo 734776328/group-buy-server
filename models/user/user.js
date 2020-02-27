@@ -7,6 +7,7 @@ let userSchema = new Schema({
   name: { type: String, default: '爱泡温泉的小雪人'},
   headPortrait: { type: String, default: '../../public/default.jpg' },
   ordersCount: { type: Number, default: 0 },
+  shopId: {type: String, default: null},
   orders: [
     {
       orderId: { type: String, require: true }, 

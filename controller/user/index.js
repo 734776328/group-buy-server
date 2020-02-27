@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import redisClient from '../../dbs/redis.js'
 import Email from '../../utils/smtp'
-import { userModel } from '../../models/user/user.js'
+import userModel from '../../models/user/user.js'
 import shop from '../../models/shop/shop.js'
 import goods from '../../models/shop/goods.js'
 let nodeMailer = require('nodemailer');
@@ -47,7 +47,6 @@ class User {
   // 账号密码登录
   async usernameLogin (req, res, next) {
     const {username, password} = req.body;
-
     if (username.indexOf(' ') !== -1 || password.indexOf(' ') !== -1) {
       res.status(401).send({
         status: 401,
@@ -57,6 +56,7 @@ class User {
       return false;
     }
     const result = await userModel.findOne({username, password});
+    console.log(username, password) 
     if (!result) {
       res.status(401).send({
         status: 401,
@@ -68,7 +68,13 @@ class User {
       res.status(200).send({
         status: 200,
         msg: '登录成功',
-        data: result
+        data: {
+          name: result.name,
+          username: result.username,
+          shopId: result.shopId,
+          headPortrait: result.headPortrait,
+          mail: result.mail
+        }
       })
     }
   }
@@ -112,6 +118,8 @@ class User {
             msg: '登陆成功！',
             data: {
               name: userInfo.name,
+              username: result.username,
+              shopId: result.shopId,
               headPortrait: userInfo.headPortrait,
               mail: userInfo.mail
             }
@@ -181,6 +189,8 @@ class User {
       return false;
     }
     const { password } = req.body;
+    const test = req.body;
+    console.log(test)
     const { mail } = req.session.userInfo;
     if ( !password ) {
       res.status(401).send({

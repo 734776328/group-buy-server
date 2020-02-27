@@ -15,6 +15,9 @@ router.get('/shops/:shopid/:goodsid', shop.getGoodsDetaile);
 router.get('/search', shop.search);
 // 热门搜索
 router.get('/hotsearch', shop.getHotSearch);
+// 添加商品
+router.put('/goods', shop.addGoods)
+
 
 // ----test
 router.post('/addgoods', shop.goods)
