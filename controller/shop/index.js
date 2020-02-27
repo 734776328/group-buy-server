@@ -69,7 +69,6 @@ class Shop {
         console.log(err)
         return false;
       }
-      console.log('resulte',resulte)
       res.send(resulte)
     })
     
@@ -139,7 +138,6 @@ class Shop {
   async getGoodsDetaile (req, res, next) {
     const { goodsid } = req.params;
     let resultGoods = await goodsModel.find({'goods.goodsId': goodsid});
-    console.log(resultGoods)
     if (resultGoods.length) {
       res.status(200).send({
         msg: '获取商品！',
@@ -181,7 +179,6 @@ class Shop {
       return false
     }
     let isExits = await hotSearchModel.find({name: keyword});
-    console.log('isExits',isExits)
     if (isExits.length === 0) {
       let create = new hotSearchModel({
         name: keyword,

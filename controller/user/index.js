@@ -121,7 +121,7 @@ class User {
     })
     
   }
-  // 注册
+  // 用户注册
   register (req, res, next) {
     const { username, password } = req.body;
     const { mail } = req.params;
