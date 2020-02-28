@@ -2,6 +2,7 @@ import shopModel from '../../models/shop/shop.js'
 import goodsModel from '../../models/shop/goods.js'
 import keywordModel from '../../models/shop/keyword.js'
 import hotSearchModel from '../../models/shop/hotSearch.js'
+
 class Shop {
   constructor () {
     this.getShops = this.getShops.bind(this)
@@ -12,6 +13,7 @@ class Shop {
     this.search = this.search.bind(this)
     this.createShop = this.createShop.bind(this)
     this.addGoods = this.addGoods.bind(this)
+    this.saveImg = this.saveImg.bind(this)
   }
   // 添加商品
   async goods (req, res, next) {
@@ -109,27 +111,43 @@ class Shop {
   }
   // 添加商品
   async addGoods (req, res, next) {
+    if (!req.session.userInfo) {
+      res.status(401).send({
+        msg: '未登录',
+        data: {}
+      })
+      return false
+    }
     // req.body 自动会将JSON数据转为对象
-    // let { goodsData } = req. body
-    // goodsData = JSON.parse(goodsData)
-    // goodsData.goodsId = this.randomId()
-    // console.log(goodsData)
-    // let { username, mail } = req.session.userInfo
-    // let create = new goodsModel({
-    //   mail: mail,
-    //   shopId: '000000000',
-    //   goods: goodsData.goods
-    // })
-    // create.save( (err, result) => {
-    //   if (err) {
-    //     console.log( err );
-    //     res.status(500).send({
-    //       msg: '服务器繁忙，请稍后再试！',
-    //       data: {}
-    //     })
-    //     return false;
-    //   }
-    // } )
+    let { goodsData } = req. body
+    let { username, mail } = req.session.userInfo
+    goodsData = JSON.parse(goodsData)
+    goodsData.goods.goodsId = this.randomId()
+    goodsData.shopId = username
+    let create = new goodsModel({
+      mail: mail,
+      shopId: username,
+      goods: goodsData.goods
+    })
+    create.save( (err, result) => {
+      if (err) {
+        console.log( err );
+        res.status(500).send({
+          msg: '服务器繁忙，请稍后再试！',
+          data: {}
+        })
+        return false;
+      }
+      res.status(200).send({
+        msg: '发布成功！',
+        data: {}
+      })
+    })
+  }
+  // 处理上传的商铺商铺图片
+  async saveImg (req, res, next) {
+    const data = req.files
+    console.log(data)
   }
   // 返回所有商铺
   async getShops (req, res, next) {

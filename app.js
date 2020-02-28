@@ -1,6 +1,5 @@
 import express from 'express';
 import router from './routes/index.js';
-import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import session from 'express-session'
 
@@ -27,9 +26,9 @@ app.all('*', (req, res, next) => {
 	}
 });
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ limit: '30mb',extended: false }))
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '30mb'}))
 
 app.use(session({
 	secret: '$@&*W#$^',
@@ -38,5 +37,3 @@ app.use(session({
 }))
 
 router(app);
-
-

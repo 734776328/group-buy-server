@@ -8,6 +8,7 @@ let userSchema = new Schema({
   headPortrait: { type: String, default: '../../public/default.jpg' },
   ordersCount: { type: Number, default: 0 },
   shopId: {type: String, default: null},
+  merchant: { type: Boolean, default: false},
   orders: [
     {
       orderId: { type: String, require: true }, 

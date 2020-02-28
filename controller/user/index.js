@@ -73,7 +73,8 @@ class User {
           username: result.username,
           shopId: result.shopId,
           headPortrait: result.headPortrait,
-          mail: result.mail
+          mail: result.mail,
+          merchant: result.merchant
         }
       })
     }
@@ -243,6 +244,7 @@ class User {
       })
       return false;
     }
+    console.log(req.session.userInfo)
     res.status(200).send({
       msg: '获取成功！',
       data: req.session.userInfo

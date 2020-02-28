@@ -1,5 +1,6 @@
 import express from 'express'
 import shop from '../../controller/shop'
+import upload from '../../utils/multer'
 
 let router = express.Router()
 
@@ -17,7 +18,8 @@ router.get('/search', shop.search);
 router.get('/hotsearch', shop.getHotSearch);
 // 添加商品
 router.put('/goods', shop.addGoods)
-
+// 保存图片地址
+router.post('/goodsimg', upload.any(), shop.saveImg)
 
 // ----test
 router.post('/addgoods', shop.goods)
