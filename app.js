@@ -11,6 +11,12 @@ app.listen(3000, () => {
   console.log('server is start...')
 })
 
+app.use(session({
+	secret: '##@@##',
+	resave: false,
+	saveUninitialized: true
+}))
+
 app.all('*', (req, res, next) => {
   const { origin, Origin, referer, Referer } = req.headers;
   const allowOrigin = origin || Origin || referer || Referer || '*';
@@ -30,10 +36,6 @@ app.use(bodyParser.urlencoded({ limit: '30mb',extended: false }))
 // parse application/json
 app.use(bodyParser.json({limit: '30mb'}))
 
-app.use(session({
-	secret: '$@&*W#$^',
-	resave: false,
-	saveUninitialized: true
-}))
+
 
 router(app);

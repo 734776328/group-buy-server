@@ -6,7 +6,7 @@ let smtp = {
     return '734776328@qq.com'
   },
   get pass () {
-    return 'juojjucvgqtdbeae'
+    return 'nyrbistmuykzbfih'
   },
   get code () {
     return () => {

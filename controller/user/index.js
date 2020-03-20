@@ -50,21 +50,20 @@ class User {
     if (username.indexOf(' ') !== -1 || password.indexOf(' ') !== -1) {
       res.status(401).send({
         status: 401,
-        msg: '验证密码错误！',
+        msg: '账号密码不能为空！',
         data: {}
       })
       return false;
     }
     const result = await userModel.findOne({username, password});
-    console.log(username, password) 
     if (!result) {
       res.status(401).send({
         status: 401,
-        msg: '验证密码错误！',
+        msg: '账号或密码错误',
         data: {}
       })
     } else {
-      req.session.userInfo = result;
+      req.session.userInfo = result
       res.status(200).send({
         status: 200,
         msg: '登录成功',
@@ -114,7 +113,10 @@ class User {
             data: null
           })
         } else {
+          console.log('--邮箱登录--')
           req.session.userInfo = userInfo
+          console.log(req.session)
+          console.log('--邮箱登录--')
           res.status(200).send({
             msg: '登陆成功！',
             data: {
@@ -244,7 +246,7 @@ class User {
       })
       return false;
     }
-    console.log(req.session.userInfo)
+    console.log(req.session)
     res.status(200).send({
       msg: '获取成功！',
       data: req.session.userInfo
