@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+﻿import crypto from 'crypto'
 import redisClient from '../../dbs/redis.js'
 import Email from '../../utils/smtp'
 import userModel from '../../models/user/user.js'
@@ -56,6 +56,8 @@ class User {
       return false;
     }
     const result = await userModel.findOne({username, password});
+    console.log(result)
+    console.log(username, password)
     if (!result) {
       res.status(401).send({
         status: 401,
@@ -246,7 +248,11 @@ class User {
       })
       return false;
     }
+<<<<<<< HEAD
     console.log(req.session)
+=======
+    console.log(req.session.userInfo)
+>>>>>>> dev
     res.status(200).send({
       msg: '获取成功！',
       data: req.session.userInfo

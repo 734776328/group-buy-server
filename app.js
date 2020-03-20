@@ -35,7 +35,17 @@ app.all('*', (req, res, next) => {
 app.use(bodyParser.urlencoded({ limit: '30mb',extended: false }))
 // parse application/json
 app.use(bodyParser.json({limit: '30mb'}))
+<<<<<<< HEAD
 
 
 
+=======
+
+app.use(session({
+	secret: '$@&*W#$^',
+	resave: false,
+	saveUninitialized: true
+}))
+
+>>>>>>> dev
 router(app);
