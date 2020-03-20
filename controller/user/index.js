@@ -1,7 +1,7 @@
-import crypto from 'crypto'
+﻿import crypto from 'crypto'
 import redisClient from '../../dbs/redis.js'
 import Email from '../../utils/smtp'
-import { userModel } from '../../models/user/user.js'
+import userModel from '../../models/user/user.js'
 import shop from '../../models/shop/shop.js'
 import goods from '../../models/shop/goods.js'
 let nodeMailer = require('nodemailer');
@@ -47,20 +47,21 @@ class User {
   // 账号密码登录
   async usernameLogin (req, res, next) {
     const {username, password} = req.body;
-
     if (username.indexOf(' ') !== -1 || password.indexOf(' ') !== -1) {
       res.status(401).send({
         status: 401,
-        msg: '验证密码错误！',
+        msg: '账号密码不能为空！',
         data: {}
       })
       return false;
     }
     const result = await userModel.findOne({username, password});
+    console.log(result)
+    console.log(username, password)
     if (!result) {
       res.status(401).send({
         status: 401,
-        msg: '验证密码错误！',
+        msg: '账号或密码错误',
         data: {}
       })
     } else {
@@ -68,7 +69,14 @@ class User {
       res.status(200).send({
         status: 200,
         msg: '登录成功',
-        data: result
+        data: {
+          name: result.name,
+          username: result.username,
+          shopId: result.shopId,
+          headPortrait: result.headPortrait,
+          mail: result.mail,
+          merchant: result.merchant
+        }
       })
     }
   }
@@ -112,6 +120,8 @@ class User {
             msg: '登陆成功！',
             data: {
               name: userInfo.name,
+              username: result.username,
+              shopId: result.shopId,
               headPortrait: userInfo.headPortrait,
               mail: userInfo.mail
             }
@@ -181,6 +191,8 @@ class User {
       return false;
     }
     const { password } = req.body;
+    const test = req.body;
+    console.log(test)
     const { mail } = req.session.userInfo;
     if ( !password ) {
       res.status(401).send({
@@ -233,6 +245,7 @@ class User {
       })
       return false;
     }
+    console.log(req.session.userInfo)
     res.status(200).send({
       msg: '获取成功！',
       data: req.session.userInfo

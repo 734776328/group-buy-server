@@ -2,6 +2,7 @@ import shopModel from '../../models/shop/shop.js'
 import goodsModel from '../../models/shop/goods.js'
 import keywordModel from '../../models/shop/keyword.js'
 import hotSearchModel from '../../models/shop/hotSearch.js'
+
 class Shop {
   constructor () {
     this.getShops = this.getShops.bind(this)
@@ -11,6 +12,8 @@ class Shop {
     this.getShopInfo = this.getShopInfo.bind(this)
     this.search = this.search.bind(this)
     this.createShop = this.createShop.bind(this)
+    this.addGoods = this.addGoods.bind(this)
+    this.saveImg = this.saveImg.bind(this)
   }
   // 添加商品
   async goods (req, res, next) {
@@ -106,6 +109,46 @@ class Shop {
       })
     })
   }
+  // 添加商品
+  async addGoods (req, res, next) {
+    if (!req.session.userInfo) {
+      res.status(401).send({
+        msg: '未登录',
+        data: {}
+      })
+      return false
+    }
+    // req.body 自动会将JSON数据转为对象
+    let { goodsData } = req. body
+    let { username, mail } = req.session.userInfo
+    goodsData = JSON.parse(goodsData)
+    goodsData.goods.goodsId = this.randomId()
+    goodsData.shopId = username
+    let create = new goodsModel({
+      mail: mail,
+      shopId: username,
+      goods: goodsData.goods
+    })
+    create.save( (err, result) => {
+      if (err) {
+        console.log( err );
+        res.status(500).send({
+          msg: '服务器繁忙，请稍后再试！',
+          data: {}
+        })
+        return false;
+      }
+      res.status(200).send({
+        msg: '发布成功！',
+        data: {}
+      })
+    })
+  }
+  // 处理上传的商铺商铺图片
+  async saveImg (req, res, next) {
+    const data = req.files
+    console.log(data)
+  }
   // 返回所有商铺
   async getShops (req, res, next) {
     let result = await shopModel.find();
@@ -116,6 +159,7 @@ class Shop {
   }
   // 返回某个商铺的详情,包括商品信息
   async getShopDetaile (req, res, next) {
+    console.log(req.params)
     const { shopid } = req.params;
     let resultGoods = await goodsModel.find({shopId: shopid});
     let shopInfo = await shopModel.findOne({shopId: shopid});

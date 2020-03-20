@@ -8,11 +8,12 @@ let goodsSchema = new Schema({
     originPrice: { type: String, default: 0 },
     preferentialPrice: { type: String, default: 0 },
     name: {type: String, default: '山有木兮' },
-    consumeSum: { type: Number, default: 16 },
+    consumeSum: { type: Number, default: 0 },
     backTime: { type: Number, default: 1 },
     overdueBack: { type: Number, default: 1 },
     slideImg: { type: Array, required: true},
     imgText: { type: String, default: '请参考下图' },
+    goodsDescribe: { type: String, default: '程序员客栈，欢迎入住！'},
     imgDescribe: [
       { type: String, require: true}
     ],
