@@ -2,10 +2,10 @@ import express from 'express';
 import router from './routes/index.js';
 import bodyParser from 'body-parser'
 import session from 'express-session'
+import path from 'path'
 
 import './dbs/mongodb'
 import './dbs/redis'
-
 let app = express();
 app.listen(3000, () => {
   console.log('server is start...')
@@ -25,10 +25,13 @@ app.all('*', (req, res, next) => {
     	next();
 	}
 });
+app.use('/public', express.static(path.join(__dirname, 'public')))
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ limit: '30mb',extended: false }))
 // parse application/json
-app.use(bodyParser.json({limit: '30mb'}))
+// app.use(bodyParser.json({limit: '30mb'}))
+app.use(bodyParser.json({limit : '5100000kb'}))
 
 app.use(session({
 	secret: '$@&*W#$^',

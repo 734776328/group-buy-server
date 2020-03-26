@@ -11,6 +11,7 @@ let goodsSchema = new Schema({
     consumeSum: { type: Number, default: 0 },
     backTime: { type: Number, default: 1 },
     overdueBack: { type: Number, default: 1 },
+    imgNames: { type: Array, default: ''},
     slideImg: { type: Array, required: true},
     imgText: { type: String, default: '请参考下图' },
     goodsDescribe: { type: String, default: '程序员客栈，欢迎入住！'},

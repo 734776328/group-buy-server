@@ -1,57 +1,58 @@
 import shopModel from '../../models/shop/shop.js'
 import goodsModel from '../../models/shop/goods.js'
+import userModel from '../../models/user/user.js'
 import keywordModel from '../../models/shop/keyword.js'
 import hotSearchModel from '../../models/shop/hotSearch.js'
+import axios from 'axios'
 
 class Shop {
   constructor () {
     this.getShops = this.getShops.bind(this)
-    this.goods = this.goods.bind(this)
+    // this.goods = this.goods.bind(this)
     this.getShopDetaile = this.getShopDetaile.bind(this)
     this.getGoodsDetaile = this.getGoodsDetaile.bind(this)
     this.getShopInfo = this.getShopInfo.bind(this)
     this.search = this.search.bind(this)
     this.createShop = this.createShop.bind(this)
     this.addGoods = this.addGoods.bind(this)
-    this.saveImg = this.saveImg.bind(this)
+    this.saveShopImg = this.saveShopImg.bind(this)
+    this.saveGoodsImg = this.saveGoodsImg.bind(this)
+    this.changeGoods = this.changeGoods.bind(this)
   }
   // 添加商品
-  async goods (req, res, next) {
-    const { shopname, adder, goodsname} = req.body;
+  async addGoods (req, res, next) {
+    const { goodsData } = req.body
+    var goodsInfo = JSON.parse(goodsData).goods
+    const {username} = req.session.userInfo.username
+    goodsInfo.imgNames.forEach((item, index) => {
+      if (!item) return
+      if (index < 3 ) {
+        if (item.indexOf('public') === -1) {
+          goodsInfo.slideImg[index] = 'public/' + item
+        }
+      } else if (index >= 3) {
+        if (item.indexOf('public') === -1) {
+          goodsInfo.imgDescribe[index-3] = 'public/' + item
+        }
+      }
+    })
     var insert = new goodsModel({
-      userMail: '748642911@qq.com',
-      shopId: 'zhanghuan1111',
-      shopname: shopname,
-      adder: adder,
-      imgUrl: [
-        'https://p1.meituan.net/320.0/tdchotel/e9e6284143e395cbabbd8a48302c5696103878.jpg',
-        'https://p0.meituan.net/320.0/tdchotel/499dae486b4a2daefe3e85056867dc5e75451.jpg',
-        'https://p0.meituan.net/320.0/tdchotel/643db009d34b9bd492f87bb3188650bc79635.jpg'
-      ],
+      mail: req.session.userInfo.mail,
+      shopId: req.session.userInfo.username,
       goods: {
         goodsId: this.randomId(),
-        goodsname: goodsname,
-        originPrice: '89.00',
-        preferentialPrice: '66.00',
-        consumeSum: 18,
-        backTime: 1,
-        overdueBack: 1,
-        slideImg: [
-          'https://p0.meituan.net/merchantpic/f934f89320f9227d6238927c61a61e68112011.jpg%40450w_280h_1e_1c_1l%7Cwatermark%3D0', 
-          'https://p0.meituan.net/merchantpic/febfb8b61871ceedd3ed6e88e7fd4d3e88732.jpg%40450w_280h_1e_1c_1l%7Cwatermark%3D0',
-          'https://p0.meituan.net/dpdeal/6a8e3950977543e53f1ecabcfac677193754273.jpg%40450w_280h_1e_1c_1l%7Cwatermark%3D0',
-          'https://p0.meituan.net/merchantpic/a8219e9c30abc0683f4b91560c4338d258856.jpg%40450w_280h_1e_1c_1l%7Cwatermark%3D0',
-          'https://p0.meituan.net/merchantpic/537dea1f02d2d683814bcdc1db1998e573705.jpg%40450w_280h_1e_1c_1l%7Cwatermark%3D0'
-        ],
-        imgDescribe: [
-          'https://p0.meituan.net/dpdeal/3f67737e108f06b43d76a4f7fbf68ee9576970.jpg%40450w_1024h_1e_1l%7Cwatermark%3D0',
-          'https://p1.meituan.net/dpdeal/40ad8356597fdaf740a664985101ed1a95296.jpg%40450w_1024h_1e_1l%7Cwatermark%3D0',
-          'https://p1.meituan.net/dpdeal/4fd4932ac32f45d38b2f2f10d1ec1d39150864.jpg%40450w_1024h_1e_1l%7Cwatermark%3D0'
-        ],
-        periodValidity: 60,
-        appointmentTime: 1,
-        usePeople: 1,
-        evaluateCount: 1,
+        name: goodsInfo.name,
+        goodsDescribe: goodsInfo.goodsDescribe,
+        originPrice: goodsInfo.originPrice,
+        preferentialPrice: goodsInfo.preferentialPrice,
+        consumeSum: goodsInfo.consumeSum,
+        imgNames: goodsInfo.imgNames,
+        slideImg: goodsInfo.slideImg,
+        imgDescribe: goodsInfo.imgDescribe,
+        periodValidity: goodsInfo.periodValidity,
+        appointmentTime: goodsInfo.appointmentTime,
+        usePeople: goodsInfo.usePeople,
+        evaluateCount: goodsInfo.evaluateCount,
         evaluate: [
           {
             username: '山有木兮',
@@ -76,82 +77,164 @@ class Shop {
     })
     
   }
-
+  // 修改商品
+  async changeGoods (req, res, next) {
+    const { goodsid } = req.params
+    let { goodsData } = req.body
+    goodsData = JSON.parse(goodsData).goods
+    console.log(goodsData)
+    console.log(goodsData.imgNames)
+    goodsData.imgNames.forEach( (item, index) => {
+      if (!item) return
+      if (index < 3 ) {
+        if (item.indexOf('public') === -1) {
+          goodsData.slideImg[index] = 'public/' + item
+        }
+      } else if (index >= 3) {
+        if (item.indexOf('public') === -1) {
+          goodsData.imgDescribe[index-3] = 'public/' + item
+        }
+      }
+    })
+    let result = await goodsModel.updateOne({"goods.goodsId": goodsid}, {
+      'goods.originPrice': goodsData.originPrice,
+      'goods.preferentialPrice': goodsData.preferentialPrice,
+      'goods.name': goodsData.name,
+      'goods.consumeSum': goodsData.consumeSum,
+      'goods.imgNames': goodsData.imgNames,
+      'goods.slideImg': goodsData.slideImg,
+      'goods.goodsDescribe': goodsData.goodsDescribe,
+      'goods.imgDescribe': goodsData.imgDescribe,
+      'goods.useDate': goodsData.useDate,
+      'goods.appointmentTime': goodsData.appointmentTime,
+      'goods.usePeople': goodsData.usePeople,
+    })
+    if (result) {
+      res.status(200).send({
+        status: 200,
+        msg: '修改成功！',
+        data: {}
+      })
+    } else {
+      res.status(500).send({
+        status: 500,
+        msg: '无服务器繁忙,请稍后再试！',
+        data: {}
+      })
+    }
+  }
   //创建商铺 
   async createShop (req, res, next) {
-    const { mail, shopname, adder, shopid } = req.body;
-    let describe = '海珠区前进路146号晓港公园内 正门进往右200米清竹园内'
-    let create = new shopModel({
-      shopId: shopid,
-      userMail: mail,
-      shopName: shopname,
-      adder: adder,
-      imgUrl: [
-        'https://p1.meituan.net/320.0/tdchotel/e9e6284143e395cbabbd8a48302c5696103878.jpg',
-        'https://p0.meituan.net/320.0/tdchotel/499dae486b4a2daefe3e85056867dc5e75451.jpg',
-        'https://p0.meituan.net/320.0/tdchotel/643db009d34b9bd492f87bb3188650bc79635.jpg'
-      ],
-      describe: '蛋雕DIY,雕刻你想要的一切',
-      consumptionPerPerson: 30
-    })
-    create.save( (err, resulte) => {
-      if (err) {
-        console.log(err)
-        res.status(503).send({
-          msg: '服务器繁忙！',
-          data: {}
-        })
-        return false;
+    const shopData = JSON.parse(req.body.shopData)
+    const { username } = req.session.userInfo
+    const shops = await userModel.findOne({mail: req.session.userInfo.mail})
+    console.log(shopData.imgNames)
+    shopData.imgNames.forEach( (item, index) => {
+      if (item && item.indexOf('public') === -1) {
+        shopData.imgUrl[index] = 'public/' + shopData.imgNames[index]
       }
-      res.status(200).send({
-        msg: '创建成功',
-        data: {}
-      })
     })
-  }
-  // 添加商品
-  async addGoods (req, res, next) {
-    if (!req.session.userInfo) {
-      res.status(401).send({
-        msg: '未登录',
-        data: {}
+    if (!shops.merchant) {
+      let create = new shopModel({
+        shopId: req.session.userInfo.username,
+        businessHoursBegin: shopData.businessHoursBegin,
+        businessHoursClose: shopData.businessHoursClose,
+        label: shopData.label,
+        timeRefund: shopData.timeRefund,
+        overdueRefund: shopData.overdueRefund,
+        imgUrl: shopData.imgUrl,
+        describe: shopData.describe,
+        businessHours: shopData.businessHours,
+        shopName: shopData.shopName,
+        adder: shopData.adder,
+        consumptionPerPerson: shopData.consumptionPerPerson,
+        keywords: shopData.keywords,
+        userMail: req.session.userInfo.mail
       })
-      return false
+      create.save(async (err, result) => {
+        if (err) {
+          console.log(err)
+          res.status(500).send({
+            status: 500,
+            msg: '服务器繁忙,请稍后再试-N',
+            data: {}
+          })
+          return
+        } else {
+          await userModel.updateOne({mail: req.session.userInfo.mail}, {merchant: true, shopId: req.session.userInfo.username})
+          res.status(200).send({
+            status: 200,
+            msg: '创建成功',
+            data: {}
+          })
+        }
+      })
+    } else {
+      await shopModel.updateOne({shopId: req.session.userInfo.username}, {
+        businessHoursBegin: shopData.businessHoursBegin,
+        businessHoursClose: shopData.businessHoursClose,
+        label: shopData.label,
+        timeRefund: shopData.timeRefund,
+        overdueRefund: shopData.overdueRefund,
+        imgUrl: shopData.imgUrl,
+        describe: shopData.describe,
+        businessHours: shopData.businessHours,
+        shopName: shopData.shopName,
+        adder: shopData.adder,
+        consumptionPerPerson: shopData.consumptionPerPerson,
+        keywords: shopData.keywords
+      }, async (err, result) => {
+        if (err) {
+          console.log(err)
+          res.status(500).send({
+            status: 500,
+            msg: '服务器繁忙， 请稍后再试！',
+            data: {}
+          })
+          return false
+        }
+        await userModel.updateOne({mail: req.session.userInfo.mail}, {merchant: true})
+        res.status(200).send({
+          status: 200,
+          msg: '更新成功！',
+          data: {
+            businessHoursBegin: shopData.businessHoursBegin,
+            businessHoursClose: shopData.businessHoursClose,
+            label: shopData.label,
+            timeRefund: shopData.timeRefund,
+            overdueRefund: shopData.overdueRefund,
+            imgUrl: shopData.imgUrl,
+            describe: shopData.describe,
+            businessHours: shopData.businessHours,
+            shopName: shopData.shopName,
+            adder: shopData.adder,
+            consumptionPerPerson: shopData.consumptionPerPerson,
+            keywords: shopData.keywords
+          }
+        })
+      })
     }
-    // req.body 自动会将JSON数据转为对象
-    let { goodsData } = req. body
-    let { username, mail } = req.session.userInfo
-    goodsData = JSON.parse(goodsData)
-    goodsData.goods.goodsId = this.randomId()
-    goodsData.shopId = username
-    let create = new goodsModel({
-      mail: mail,
-      shopId: username,
-      goods: goodsData.goods
-    })
-    create.save( (err, result) => {
-      if (err) {
-        console.log( err );
-        res.status(500).send({
-          msg: '服务器繁忙，请稍后再试！',
-          data: {}
-        })
-        return false;
-      }
-      res.status(200).send({
-        msg: '发布成功！',
-        data: {}
-      })
+  }
+  
+  // 处理上传的商铺图片
+  saveShopImg (req, res, next) {
+    res.status(200).send({
+      status: 200,
+      msg: '上传成功',
+      data: {}
     })
   }
-  // 处理上传的商铺商铺图片
-  async saveImg (req, res, next) {
-    const data = req.files
-    console.log(data)
+  // 处理上传的商品图片
+  saveGoodsImg (req, res, next) {
+    res.status(200).send({
+      status: 200,
+      msg: '上传成功',
+      data: {}
+    })
   }
   // 返回所有商铺
   async getShops (req, res, next) {
-    let result = await shopModel.find();
+    let result = await shopModel.find()
     res.status(200).send({
       msg: '获取成功',
       data: result
@@ -159,10 +242,9 @@ class Shop {
   }
   // 返回某个商铺的详情,包括商品信息
   async getShopDetaile (req, res, next) {
-    console.log(req.params)
-    const { shopid } = req.params;
-    let resultGoods = await goodsModel.find({shopId: shopid});
-    let shopInfo = await shopModel.findOne({shopId: shopid});
+    const { shopid } = req.params
+    let resultGoods = await goodsModel.find({shopId: shopid})
+    let shopInfo = await shopModel.findOne({shopId: shopid})
     if (resultGoods.length || shopInfo) {
       res.status(200).send({
         msg: '返回所有商品',
@@ -181,6 +263,7 @@ class Shop {
   // 获取商品详情
   async getGoodsDetaile (req, res, next) {
     const { goodsid } = req.params;
+    console.log(goodsid)
     let resultGoods = await goodsModel.find({'goods.goodsId': goodsid});
     if (resultGoods.length) {
       res.status(200).send({
@@ -230,7 +313,7 @@ class Shop {
       })
       create.save();
     } else {
-      await hotSearchModel.update({name: keyword},{$inc: {heat: 1}});
+      await hotSearchModel.updateOne({name: keyword},{$inc: {heat: 1}});
     }
 
     let result = await shopModel.find({keywords: new RegExp(keyword)});

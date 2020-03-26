@@ -5,7 +5,7 @@ let shopSchema = Schema({
   userMail: { unique: true, type: String, required: true, },
   shopName: { unique: true, type: String, required: true },
   adder: { type: String, required: true },
-  consumptionPerPerson: { type: String, required: true},
+  consumptionPerPerson: { type: Number, required: true},
   businessHoursBegin: { type: String, default: '19:00'},
   businessHoursClose: { type: String, default: '02:00'},
   label: [
@@ -16,8 +16,10 @@ let shopSchema = Schema({
   imgUrl: [
     { type: String, required: true },
   ],
+  imgNames: [
+    { type: String, default: ''}
+  ],
   describe: { type: String, default: '超级好玩'},
-  consumptionPerPerson: { type: Number, required: true }
 })
 let ShopModel = mongoose.model('Shop', shopSchema);
 

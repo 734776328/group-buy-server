@@ -11,6 +11,8 @@ router.post('/session/mail', user.mailLogin);
 router.post('/session/username', user.usernameLogin);
 // 邮箱注册
 router.post('/user/:mail', user.register);
+// 判断用户名是否已注册
+router.get('/isRegister', user.isRegister)
 // 修改密码
 router.put('/user/:id', user.changePassword);
 // 改变头像
