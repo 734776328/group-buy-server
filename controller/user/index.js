@@ -17,6 +17,7 @@ class User {
     this.orders = this.orders.bind(this);
     this.placeOrder = this.placeOrder.bind(this);
     this.verifyCode = this.verifyCode.bind(this);
+    this.isRegister = this.isRegister.bind(this);
     this.Md5 = this.Md5.bind(this);
   }
   // 退出登录
@@ -43,6 +44,28 @@ class User {
         data: req.session.userInfo
       })
     }
+  }
+  // 判断账号是否已注册
+  async isRegister (req, res, next) {
+    let { username } = req.query
+    let userinfo = await userModel.findOne({username})
+    console.log(userinfo)
+    if (!userinfo) {
+      res.status(200).send({
+        msg: '账号不存在',
+        data: {
+          exist: false
+        }
+      })
+    } else {
+      res.status(200).send({
+        msg: '账号已存在',
+        data: {
+          exist: true
+        }
+      })
+    }
+    
   }
   // 账号密码登录
   async usernameLogin (req, res, next) {
@@ -108,7 +131,7 @@ class User {
         let userInfo = await userModel.findOne({mail})
         redisClient.del(`mail:${mail}`)
         if ( userInfo == null ) {
-          req.session.register = mail;
+          req.session.register = mail
           // res.redirect(`register/${mail}`);
           res.status(200).send({
             msg: '账号未注册！',
