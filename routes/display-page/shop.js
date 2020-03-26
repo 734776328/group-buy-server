@@ -23,7 +23,7 @@ router.put('/goods/:goodsid', shop.changeGoods)
 // 保存商铺图片地址
 router.post('/shopimg', upload.any(), shop.saveShopImg)
 // 保存商品图片地址
-router.post('/goodsimg', upload.any(), shop.saveGoodsImg)
+router.post('/goodsimg/:goodsid', upload.any(), shop.saveGoodsImg)
 // 创建商铺
 router.put('/shops', shop.createShop)
 

@@ -7,7 +7,11 @@ let storage = multer.diskStorage({
     cb(null, 'D:/resource/web项目/移动端美团/tt-app-server/public')
   },
   filename: function (req, file, cb) {
-    cb(null,  req.session.userInfo.username + '-'+file.fieldname+'.' + file.originalname.split('.')[file.originalname.split('.').length-1])
+    if (req.params.goodsid) {
+      cb(null,  req.session.userInfo.username + '-' + req.params.goodsid +'-'+file.fieldname+'.' + file.originalname.split('.')[file.originalname.split('.').length-1])
+    } else if (file.fieldname.indexOf('shop') != -1) {
+      cb(null,  req.session.userInfo.username + '-'+file.fieldname+'.' + file.originalname.split('.')[file.originalname.split('.').length-1])
+    }
   }
 })
 let upload = multer({ storage: storage })

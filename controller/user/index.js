@@ -271,11 +271,6 @@ class User {
       })
       return false;
     }
-<<<<<<< HEAD
-    console.log(req.session)
-=======
-    console.log(req.session.userInfo)
->>>>>>> dev
     res.status(200).send({
       msg: '获取成功！',
       data: req.session.userInfo

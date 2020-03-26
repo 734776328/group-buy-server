@@ -35,18 +35,8 @@ app.use('/public', express.static(path.join(__dirname, 'public')))
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ limit: '30mb',extended: false }))
-// parse application/json
-<<<<<<< HEAD
-app.use(bodyParser.json({limit: '30mb'}))
-<<<<<<< HEAD
-
-
-
-=======
-=======
 // app.use(bodyParser.json({limit: '30mb'}))
 app.use(bodyParser.json({limit : '5100000kb'}))
->>>>>>> dev
 
 app.use(session({
 	secret: '$@&*W#$^',
@@ -54,5 +44,4 @@ app.use(session({
 	saveUninitialized: true
 }))
 
->>>>>>> dev
 router(app);

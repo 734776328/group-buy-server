@@ -24,15 +24,16 @@ class Shop {
     const { goodsData } = req.body
     var goodsInfo = JSON.parse(goodsData).goods
     const {username} = req.session.userInfo.username
+    const goodsId = this.randomId()
     goodsInfo.imgNames.forEach((item, index) => {
       if (!item) return
       if (index < 3 ) {
         if (item.indexOf('public') === -1) {
-          goodsInfo.slideImg[index] = 'public/' + item
+          goodsInfo.slideImg[index] = `public/${req.session.userInfo.username}-${goodsId}-${item}`
         }
       } else if (index >= 3) {
         if (item.indexOf('public') === -1) {
-          goodsInfo.imgDescribe[index-3] = 'public/' + item
+          goodsInfo.imgDescribe[index-3] = `public/${req.session.userInfo.username}-${goodsId}-${item}`
         }
       }
     })
@@ -40,7 +41,7 @@ class Shop {
       mail: req.session.userInfo.mail,
       shopId: req.session.userInfo.username,
       goods: {
-        goodsId: this.randomId(),
+        goodsId,
         name: goodsInfo.name,
         goodsDescribe: goodsInfo.goodsDescribe,
         originPrice: goodsInfo.originPrice,
@@ -73,7 +74,12 @@ class Shop {
         console.log(err)
         return false;
       }
-      res.send(resulte)
+      res.status(200).send({
+        status: 200,
+        data: {
+          goodsId
+        }
+      })
     })
     
   }
@@ -82,17 +88,18 @@ class Shop {
     const { goodsid } = req.params
     let { goodsData } = req.body
     goodsData = JSON.parse(goodsData).goods
-    console.log(goodsData)
+    console.log('--------')
+    console.log(req.session)
     console.log(goodsData.imgNames)
     goodsData.imgNames.forEach( (item, index) => {
       if (!item) return
       if (index < 3 ) {
         if (item.indexOf('public') === -1) {
-          goodsData.slideImg[index] = 'public/' + item
+          goodsData.slideImg[index] = `public/${req.session.userInfo.username}-${goodsid}-${item}`
         }
       } else if (index >= 3) {
         if (item.indexOf('public') === -1) {
-          goodsData.imgDescribe[index-3] = 'public/' + item
+          goodsData.imgDescribe[index-3] = `public/${req.session.userInfo.username}-${goodsid}-${item}`
         }
       }
     })
