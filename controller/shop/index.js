@@ -18,6 +18,7 @@ class Shop {
     this.saveShopImg = this.saveShopImg.bind(this)
     this.saveGoodsImg = this.saveGoodsImg.bind(this)
     this.changeGoods = this.changeGoods.bind(this)
+    this.deleteGoods = this.deleteGoods.bind(this)
   }
   // 添加商品
   async addGoods (req, res, next) {
@@ -83,14 +84,33 @@ class Shop {
     })
     
   }
+  // 删除商品 
+  deleteGoods (req, res, next) {
+    const { goodsid } = req.params
+    const { username } = req.session.userInfo
+    goodsModel.deleteOne({'shopId': username, 'goods.goodsId': goodsid}, (err, docs) => {
+      if (err) {
+        res.send({
+          status: 500,
+          msg: '删除失败！',
+          data: {}
+        })
+        return
+      }
+      if (docs) {
+        res.send({
+          status: 200,
+          msg: '删除成功！',
+          data: {}
+        })
+      }
+    })
+  }
   // 修改商品
   async changeGoods (req, res, next) {
     const { goodsid } = req.params
     let { goodsData } = req.body
     goodsData = JSON.parse(goodsData).goods
-    console.log('--------')
-    console.log(req.session)
-    console.log(goodsData.imgNames)
     goodsData.imgNames.forEach( (item, index) => {
       if (!item) return
       if (index < 3 ) {

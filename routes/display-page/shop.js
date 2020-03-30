@@ -26,7 +26,8 @@ router.post('/shopimg', upload.any(), shop.saveShopImg)
 router.post('/goodsimg/:goodsid', upload.any(), shop.saveGoodsImg)
 // 创建商铺
 router.put('/shops', shop.createShop)
-
+// 删除商品
+router.put('/:username/:goodsid', shop.deleteGoods)
 // ----test
 router.post('/addgoods', shop.addGoods)
 
