@@ -3,6 +3,7 @@ import goodsModel from '../../models/shop/goods.js'
 import userModel from '../../models/user/user.js'
 import keywordModel from '../../models/shop/keyword.js'
 import hotSearchModel from '../../models/shop/hotSearch.js'
+import cityModel from '../../models/shop/city.js'
 import axios from 'axios'
 
 class Shop {
@@ -19,6 +20,7 @@ class Shop {
     this.saveGoodsImg = this.saveGoodsImg.bind(this)
     this.changeGoods = this.changeGoods.bind(this)
     this.deleteGoods = this.deleteGoods.bind(this)
+    this.addCity = this.addCity.bind(this)
   }
   // 添加商品
   async addGoods (req, res, next) {
@@ -370,6 +372,21 @@ class Shop {
   clearRepeat (el) {
     console.log(el)
     return
+  }
+  // -----------test 
+  addCity (req, res, next) {
+    console.log(JSON.parse(req.query.cityinfo))
+    const {provice, city} = JSON.parse(req.query.cityinfo)
+    const proviceCode = city[0].adcode.substring(0,2)
+    let result = new cityModel({
+      provice,
+      proviceCode,
+      city
+    })
+    let a = result.save()
+    res.send({
+      data: a
+    })
   }
 }
 

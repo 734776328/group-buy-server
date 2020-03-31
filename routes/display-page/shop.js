@@ -30,6 +30,8 @@ router.put('/shops', shop.createShop)
 router.put('/:username/:goodsid', shop.deleteGoods)
 // ----test
 router.post('/addgoods', shop.addGoods)
+// 添加城市 -test
+router.get('/addCity', shop.addCity)
 
 
 export default router

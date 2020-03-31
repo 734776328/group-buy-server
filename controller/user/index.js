@@ -18,6 +18,7 @@ class User {
     this.placeOrder = this.placeOrder.bind(this);
     this.verifyCode = this.verifyCode.bind(this);
     this.isRegister = this.isRegister.bind(this);
+    this.randomId = this.randomId.bind(this);
     this.Md5 = this.Md5.bind(this);
   }
   // 退出登录
@@ -308,7 +309,7 @@ class User {
       })
       return false;
     }
-    const { shopid, goodsid, count } = req.body;
+    const { shopid, goodsid } = req.params;
     const { mail } = req.session.userInfo;
     if ( !shopid || !goodsid ) {
       res.status(401).send({
@@ -318,40 +319,42 @@ class User {
       return false;
     }
     // 找出哪间商铺
-    let shopResult = await shop.findOne({shopId: shopid});
-    let goodsData = '';
-    shopResult.goods.some( (item) => {
-      if (item.goodsId === goodsid) {
-        goodsData = item;
-        return true
+    let goodsResult = await goods.findOne({shopId: shopid, 'goods.goodsId': goodsid});
+    if (goodsResult) {
+      // 创建订单数据
+      let orderDate = {
+        orderId: this.randomId(),
+        name: goodsResult.goods.name,
+        imgUrl: goodsResult.goods.slideImg[0],
+        count: 1,
+        totalValue: goodsResult.goods.preferentialPrice? goodsResult.goods.preferentialPrice : goodsResult.goods.originPrice,
+        status: 0,
+        shopid,
+        goodsid
       }
-    })
-    // 创建订单数据
-    let orderDate = {
-      orderId: this.Md5(mail),
-      name: goodsData.name,
-      imgUrl: goodsData.slideImg[0],
-      count: 1,
-      totalValue: goodsData.preferentialPrice? goodsData.preferentialPrice * count : goodsData.originPrice * count,
-      status: 0
+      // 创建订单
+      let data = userModel.updateOne({ mail }, {
+        '$push': {
+          'orders': orderDate
+        }
+      }, (err, result) => {
+        if (err) {
+          res.status(503).send({
+            msg: '服务器繁忙！',
+            data: {}
+          })
+        }
+      });
+      res.status(200).send({
+        msg: '下单成功！',
+        data: {}
+      })
+    } else {
+      res.status(503).send({
+        msg: '无此商铺或商品！',
+        data: {}
+      })
     }
-    // 创建订单
-    let data = userModel.updateOne({ mail }, {
-      '$push': {
-        'orders': orderDate
-      }
-    }, (err, result) => {
-      if (err) {
-        res.status(503).send({
-          msg: '服务器繁忙！',
-          data: {}
-        })
-      }
-    });
-    res.status(200).send({
-      msg: '下单成功！',
-      data: {}
-    })
   }
   // 发送验证码
   verifyCode (req, res, next) {
@@ -387,6 +390,9 @@ class User {
         })
       }
     })
+  }
+  randomId () {
+    return Math.random().toString(16).slice(2,15).toLowerCase()
   }
   Md5(data){
 		const md5 = crypto.createHash('md5');

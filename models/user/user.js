@@ -16,7 +16,9 @@ let userSchema = new Schema({
       imgUrl: { type: String, required: true },
       count: { type: Number, required: true },
       totalValue: { type: Number, required: true },
-      status: { type: Number, require: true, default: 0}
+      status: { type: Number, require: true, default: 0},
+      goodsid: { type: String, require: true},
+      shopid: { type: String, require: true},
     }
   ]
 })

@@ -20,9 +20,9 @@ router.patch('/user/:id', user.changePicture);
 // 获取用户信息
 router.get('/user/:id', user.getUserInfo);
 // 获取订单信息
-router.get('/user/:id/orders', user.orders);
+router.get('/orders', user.orders);
 // 下单
-router.put('/user/:mail/orders', user.placeOrder);
+router.put('/user/:shopid/:goodsid', user.placeOrder);
 // 获取验证码
 router.get('/verifyCode', user.verifyCode);
 
