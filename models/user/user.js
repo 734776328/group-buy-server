@@ -5,7 +5,7 @@ let userSchema = new Schema({
   username: { unique: true, type: String, required: true },
   password: { type: String, default: '' },
   name: { type: String, default: '爱泡温泉的小雪人'},
-  headPortrait: { type: String, default: '../../public/default.jpg' },
+  headPortrait: { type: String, default: 'public/headPortrait.jpg' },
   ordersCount: { type: Number, default: 0 },
   shopId: {type: String, default: null},
   merchant: { type: Boolean, default: false},

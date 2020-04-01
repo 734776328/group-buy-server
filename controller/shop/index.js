@@ -157,8 +157,7 @@ class Shop {
     const shopData = JSON.parse(req.body.shopData)
     const { username } = req.session.userInfo
     const shops = await userModel.findOne({mail: req.session.userInfo.mail})
-    console.log(shopData.imgNames)
-    shopData.imgNames.forEach( (item, index) => {
+    shopData.imgNames.forEach( (item, index) => { 
       if (item && item.indexOf('public') === -1) {
         shopData.imgUrl[index] = 'public/' + shopData.imgNames[index]
       }

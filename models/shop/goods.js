@@ -12,11 +12,11 @@ let goodsSchema = new Schema({
     backTime: { type: Number, default: 1 },
     overdueBack: { type: Number, default: 1 },
     imgNames: { type: Array, default: ''},
-    slideImg: { type: Array, required: true},
+    slideImg: { type: Array, default: 'public/default.png'},
     imgText: { type: String, default: '请参考下图' },
     goodsDescribe: { type: String, default: '程序员客栈，欢迎入住！'},
     imgDescribe: [
-      { type: String, require: true}
+      { type: String, default: 'public/default.png'}
     ],
     periodValidity: {type: Number, default: 60 },
     useDate: { type: String, default: '9-18' },

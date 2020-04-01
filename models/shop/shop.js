@@ -14,7 +14,7 @@ let shopSchema = Schema({
   timeRefund: { type: Boolean, default: true},
   overdueRefund: { type: Boolean, default: true},
   imgUrl: [
-    { type: String, required: true },
+    { type: String, default: 'public/default.png' },
   ],
   imgNames: [
     { type: String, default: ''}

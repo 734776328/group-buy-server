@@ -1,42 +1,42 @@
 display-page：
   商铺商品：  
 	商铺集合： mail 店铺id 商品id name describe adder imgs[] goods: [orginPrice preferentialPrice name consumeSum BackTime OverdueBack slideImg[] imgText[] imgDescribe periodValidity useDate appointmentTime usePeople evaluate[sum  ]
-    首页所有商铺    home：GET  localhost:8080/api2/shop 
-    某个商铺      goods:  GET   localhost:8080/api2/shop/id
-    某个所有商品  goods:  GET   localhost:8080/api2/shop/id/goods
-    某个商品     detaile: GET   localhost:8080/api2/shop/id/goods/id
-    搜索         search:  GET    localhost:8080/api2/search?id=1
-    点击搜索出来的商品 跳到某个商品   goods: GET   localhost:8080/api2/shop/id
+    首页所有商铺    home：GET  localhost:3000/api2/shop 
+    某个商铺      goods:  GET   localhost:3000/api2/shop/id
+    某个所有商品  goods:  GET   localhost:3000/api2/shop/id/goods
+    某个商品     detaile: GET   localhost:3000/api2/shop/id/goods/id
+    搜索         search:  GET    localhost:3000/api2/search?id=1
+    点击搜索出来的商品 跳到某个商品   goods: GET   localhost:3000/api2/shop/id
   
   用户：   	 
-    退出登录    user    : GET  localhost:8080/api1/loginout
-    登陆        user    : POST localhost:8080/api1/session
-    注册        user    : POST localhost:8080/api1/user
-    修改密码    user    : PUT localhost:8080/api1/user/id
-    修改头像    userinfo: PATCH localhost:8080/api1/user/id
-获取用户信息    userinfo:   GET localhost:8080/api1/user/id
-    所有订单    order:  GET localhost:8080/api1/user/id/orders
-    用户下单    order:   PUT localhost:8080/api1/user/id/orders
-    邮箱验证码  user:   GET localhost:8080/api1/user/verifycode
+    退出登录    user    : GET  localhost:3000/api1/loginout
+    登陆        user    : POST localhost:3000/api1/session
+    注册        user    : POST localhost:3000/api1/user
+    修改密码    user    : PUT localhost:3000/api1/user/id
+    修改头像    userinfo: PATCH localhost:3000/api1/user/id
+获取用户信息    userinfo:   GET localhost:3000/api1/user/id
+    所有订单    order:  GET localhost:3000/api1/user/id/orders
+    用户下单    order:   PUT localhost:3000/api1/user/id/orders
+    邮箱验证码  user:   GET localhost:3000/api1/user/verifycode
   
   工具:
-    定位   GET localhost:8080/location
+    定位   GET localhost:3000/location
 
 
 manage-page:
   普通管理员:
-    登陆:           POST localhost:8080/api3/session
-    注册：          POST localhost:8080/api3/user
-    创建商铺:       POST localhost:8080/api3/shop
-    上架商品:       POST localhost:8080/api3/shop/id
-    所有商铺列表:   GET localhost:8080/api3/shop
-    关闭商铺:      DELETE localhost:8080/api3/shop/id
-    所有商品列表:  GET localhost:8080/api3/shop/goods
-    关闭商品：     DELETE localhost:8080/api3/goods/id
-    网页访问数据:   GET localhost:8080/api3/accessingdata
+    登陆:           POST localhost:3000/api3/session
+    注册：          POST localhost:3000/api3/user
+    创建商铺:       POST localhost:3000/api3/shop
+    上架商品:       POST localhost:3000/api3/shop/id
+    所有商铺列表:   GET localhost:3000/api3/shop
+    关闭商铺:      DELETE localhost:3000/api3/shop/id
+    所有商品列表:  GET localhost:3000/api3/shop/goods
+    关闭商品：     DELETE localhost:3000/api3/goods/id
+    网页访问数据:   GET localhost:3000/api3/accessingdata
 
     超级管理员:
-        删除管理员：DELETE localhost:8080/api1/user/admin
+        删除管理员：DELETE localhost:3000/api1/user/admin
 
 
 
